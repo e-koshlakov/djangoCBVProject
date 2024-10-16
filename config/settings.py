@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Добавленные приложения
+    # Added applications
     'users',
 ]
 

@@ -5,10 +5,14 @@ NULLABLE = {'null': True, 'blank': True}
 
 class User(AbstractUser):
     username = None
+    last_name = models.CharField(max_length=50, **NULLABLE)
+    first_name = models.CharField(max_length=50, **NULLABLE)
+    # pk = models.AutoField(primary_key=True)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=15, **NULLABLE)
     address = models.TextField(**NULLABLE)
     date_of_birth = models.DateField(**NULLABLE)
+    is_active = models.BooleanField(default=True, verbose_name='active')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
