@@ -4,6 +4,14 @@ from users.models import NULLABLE
 
 
 class Category(models.Model):
+    """
+    Представляет категорию породы для собак.
+
+    Атрибуты:
+        name (str): Название породы.
+        description (str): Описание породы.
+    """
+
     name = models.CharField(max_length=100, verbose_name="breed")
     description = models.CharField(max_length=1000, verbose_name="description")
 
@@ -15,6 +23,16 @@ class Category(models.Model):
         verbose_name_plural = 'breeds'
 
 class Dog(models.Model):
+    """
+    Представляет собаку в системе.
+
+    Атрибуты:
+        name (str): Имя собаки.
+        category (Category): Порода собаки.
+        photo (ImageField): Фото собаки.
+        birth_date (date): Дата рождения собаки.
+    """
+
     name = models.CharField(max_length=250, verbose_name="dog_name")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="breed")
     photo = models.ImageField(upload_to='dogs/', verbose_name="photo", **NULLABLE)
