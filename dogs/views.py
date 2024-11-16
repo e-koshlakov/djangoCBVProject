@@ -4,8 +4,16 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from dogs.forms import DogForm
 
-
 def index(request):
+    """
+    Отображает главную страницу с тремя первыми собаками.
+
+    Аргументы:
+        request (HttpRequest): Объект запроса.
+
+    Возвращает:
+        HttpResponse: Ответ с отрендеренным шаблоном главной страницы.
+    """
     context = {
         'object_list': Dog.objects.all()[:3],
         'title': 'Питомник - Главная'
@@ -13,8 +21,16 @@ def index(request):
 
     return render(request, 'dogs/index.html', context)
 
-
 def categories(request):
+    """
+    Отображает страницу со всеми категориями пород.
+
+    Аргументы:
+        request (HttpRequest): Объект запроса.
+
+    Возвращает:
+        HttpResponse: Ответ с отрендеренным шаблоном страницы категорий.
+    """
     context = {
         'object_list': Category.objects.all(),
         'title': 'Питомник - Все наши породы'
@@ -22,8 +38,17 @@ def categories(request):
 
     return render(request, 'dogs/categories.html', context)
 
-
 def category_dogs(request, pk):
+    """
+    Отображает страницу с собаками определенной породы.
+
+    Аргументы:
+        request (HttpRequest): Объект запроса.
+        pk (int): Первичный ключ категории породы.
+
+    Возвращает:
+        HttpResponse: Ответ с отрендеренным шаблоном страницы собак определенной породы.
+    """
     category_item = Category.objects.get(pk=pk)
     context = {
         'object_list': Dog.objects.filter(category_id=pk),
@@ -33,8 +58,16 @@ def category_dogs(request, pk):
 
     return render(request, 'dogs/dogs.html', context)
 
-
 def dogs_list_view(request):
+    """
+    Отображает страницу со всеми собаками.
+
+    Аргументы:
+        request (HttpRequest): Объект запроса.
+
+    Возвращает:
+        HttpResponse: Ответ с отрендеренным шаблоном страницы всех собак.
+    """
     context = {
         'object_list': Dog.objects.all(),
         'title': 'Питомник - Все наши собаки'
@@ -42,8 +75,16 @@ def dogs_list_view(request):
 
     return render(request, 'dogs/dogs.html', context)
 
-
 def dog_create_view(request):
+    """
+    Обрабатывает создание новой собаки.
+
+    Аргументы:
+        request (HttpRequest): Объект запроса.
+
+    Возвращает:
+        HttpResponse: Ответ с отрендеренным шаблоном страницы создания собаки или перенаправление на список собак.
+    """
     form = DogForm(request.POST, request.FILES)
     if form.is_valid():
         form.save()
@@ -51,16 +92,34 @@ def dog_create_view(request):
 
     return render(request, 'dogs/create.html', {'form': DogForm()})
 
-
 def dog_detail_view(request, pk):
+    """
+    Отображает страницу с подробной информацией о собаке.
+
+    Аргументы:
+        request (HttpRequest): Объект запроса.
+        pk (int): Первичный ключ собаки.
+
+    Возвращает:
+        HttpResponse: Ответ с отрендеренным шаблоном страницы подробной информации о собаке.
+    """
     context = {
         'object': get_object_or_404(Dog, pk=pk),
-        'title': 'Питомник - Информация о  собаке'
+        'title': 'Питомник - Информация о собаке'
     }
     return render(request, 'dogs/detail.html', context)
 
-
 def dog_update_view(request, pk):
+    """
+    Обрабатывает обновление информации о собаке.
+
+    Аргументы:
+        request (HttpRequest): Объект запроса.
+        pk (int): Первичный ключ собаки.
+
+    Возвращает:
+        HttpResponse: Ответ с отрендеренным шаблоном страницы обновления собаки или перенаправление на страницу подробной информации о собаке.
+    """
     dog_object = get_object_or_404(Dog, pk=pk)
     if request.method == 'POST':
         form = DogForm(request.POST, request.FILES, instance=dog_object)
@@ -72,6 +131,16 @@ def dog_update_view(request, pk):
     return render(request, 'dogs/update.html', {'object': dog_object, 'form': DogForm(instance=dog_object)})
 
 def dog_delete_view(request, pk):
+    """
+    Обрабатывает удаление собаки.
+
+    Аргументы:
+        request (HttpRequest): Объект запроса.
+        pk (int): Первичный ключ собаки.
+
+    Возвращает:
+        HttpResponse: Ответ с отрендеренным шаблоном страницы удаления собаки или перенаправление на список собак.
+    """
     dog_object = get_object_or_404(Dog, pk=pk)
     if request.method == 'POST':
         dog_object.delete()
