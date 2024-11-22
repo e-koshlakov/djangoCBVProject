@@ -14,7 +14,7 @@ def user_register_view(request):
         new_user.save()
         return HttpResponseRedirect(reverse('users:login_user'))
 
-    return render(request, 'dogs/index.html', {'form': UserRegisterForm})
+    return render(request, 'users/register_user.html', {'form': UserRegisterForm})
 
 
 def user_login_view(request):
