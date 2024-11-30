@@ -7,14 +7,18 @@ from django.contrib.auth.decorators import login_required
 
 
 def user_register_view(request):
-    form = UserRegisterForm(request.POST or None)
-    if form.is_valid():
-        new_user = form.save()
-        new_user.set_password(form.cleaned_data['password'])
-        new_user.save()
-        return HttpResponseRedirect(reverse('users:login_user'))
+    form = UserRegisterForm(request.POST)
+    if request.method == 'POST':
+        if form.is_valid():
+            new_user = form.save()
+            new_user.set_password(form.cleaned_data['password'])
+            new_user.save()
+            return HttpResponseRedirect(reverse('users:login_user'))
+    context = {
+        'form': form
+    }
 
-    return render(request, 'users/register_user.html', {'form': UserRegisterForm})
+    return render(request, 'users/register_user.html', context)
 
 
 def user_login_view(request):
@@ -29,9 +33,12 @@ def user_login_view(request):
                     return HttpResponseRedirect(reverse('users:profile_user'))
                 else:
                     return HttpResponse('Disabled account')
-    else:
-        form = UserLoginForm()
-        return render(request, 'users/login_user.html', {'form': form})
+
+    form = UserLoginForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'users/login_user.html', context)
 
 
 @login_required
