@@ -1,7 +1,7 @@
 from django import forms
 
 from users.models import User
-
+from users.validators import validate_password
 
 
 class StyleFormMixin:
@@ -26,11 +26,12 @@ class UserRegisterForm(StyleFormMixin, forms.ModelForm):
         fields = ('email',)
 
 
-def clean_password2(self):
-    cd = self.cleaned_data
-    if cd['password'] != cd['password2']:
-        raise forms.ValidationError('Пароли не совпадаю! !!')
-    return cd['password2']
+    def clean_password2(self):
+        temp_data = self.cleaned_data
+        validate_password(temp_data['password'])
+        if temp_data['password'] != temp_data['password2']:
+            raise forms.ValidationError('Пароли не совпадаю! !!')
+        return temp_data['password2']
 
 
 class UserLoginForm(StyleFormMixin, forms.Form):
