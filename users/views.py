@@ -29,16 +29,13 @@ class UserLoginView(LoginView):
         return reverse('users:profile_user')
 
 
-@login_required
-def user_profile_view(request):
-    user_object = request.user
-    context = {
-        # 'user_object': user_object,
-        'title': f'Профиль пользователя {user_object.first_name}',
-        # 'form': UserForm(instance=user_object),
-    }
+class UserProfileView(UpdateView):
+    model = User
+    form_class = UserForm
+    template_name = 'users/user_profile_read_only.html'
 
-    return render(request, 'users/user_profile_read_only.html', context)
+    def get_object(self, queryset=None):
+        return self.request.user
 
 
 @login_required

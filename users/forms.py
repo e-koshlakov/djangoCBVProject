@@ -15,7 +15,7 @@ class StyleFormMixin:
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('email', 'first_name', 'last_name', 'phone',)
+        fields = ('email', 'first_name', 'last_name', 'phone', 'telegram', 'avatar', )
 
 
 class UserRegisterForm(StyleFormMixin, UserCreationForm):
