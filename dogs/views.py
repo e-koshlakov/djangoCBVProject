@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from dogs.forms import DogForm
 
+
 def index(request):
     """
     Отображает главную страницу с тремя первыми собаками.
@@ -21,6 +22,7 @@ def index(request):
 
     return render(request, 'dogs/index.html', context)
 
+
 def categories(request):
     """
     Отображает страницу со всеми категориями пород.
@@ -37,6 +39,7 @@ def categories(request):
     }
 
     return render(request, 'dogs/categories.html', context)
+
 
 def category_dogs(request, pk):
     """
@@ -58,6 +61,7 @@ def category_dogs(request, pk):
 
     return render(request, 'dogs/dogs.html', context)
 
+
 def dogs_list_view(request):
     """
     Отображает страницу со всеми собаками.
@@ -75,6 +79,7 @@ def dogs_list_view(request):
 
     return render(request, 'dogs/dogs.html', context)
 
+
 def dog_create_view(request):
     """
     Обрабатывает создание новой собаки.
@@ -87,10 +92,17 @@ def dog_create_view(request):
     """
     form = DogForm(request.POST, request.FILES)
     if form.is_valid():
-        form.save()
+        dog_object = form.save()
+        dog_object.owner = request.user
+        dog_object.save()
         return HttpResponseRedirect(reverse('dogs:list_dogs'))
+    context = {
+        'title': 'Добавление питомца',
+        'form': DogForm(),
+    }
 
-    return render(request, 'dogs/create.html', {'form': DogForm()})
+    return render(request, 'dogs/create_update.html', context)
+
 
 def dog_detail_view(request, pk):
     """
@@ -108,6 +120,7 @@ def dog_detail_view(request, pk):
         'title': 'Питомник - Информация о собаке'
     }
     return render(request, 'dogs/detail.html', context)
+
 
 def dog_update_view(request, pk):
     """
@@ -128,7 +141,14 @@ def dog_update_view(request, pk):
             dog_object.save()
             return HttpResponseRedirect(reverse('dogs:detail_dog', args={pk: pk}))
 
-    return render(request, 'dogs/update.html', {'object': dog_object, 'form': DogForm(instance=dog_object)})
+    context = {
+        'object': dog_object,
+        'form': DogForm(instance=dog_object),
+        'title': 'Питомник - Обновление информации о собаке'
+    }
+
+    return render(request, 'dogs/update.html', context)
+
 
 def dog_delete_view(request, pk):
     """
