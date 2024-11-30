@@ -2,7 +2,7 @@ from pyexpat.errors import messages
 from django.contrib import messages
 from django.shortcuts import render, reverse, redirect
 from users.models import User
-from users.forms import UserRegisterForm, UserLoginForm, UserForm, UserUpdateForm
+from users.forms import UserRegisterForm, UserLoginForm, UserForm, UserUpdateForm, UserPasswordChangeForm
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -90,7 +90,7 @@ def user_change_password_view(request):
     context = {
         'form': form
     }
-    return render(request, 'users/change_password.html', context)
+    return render(request, 'users/change_password_user.html', context)
 
 
 def user_logout_view(request):

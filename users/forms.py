@@ -2,7 +2,7 @@ from django import forms
 
 from users.models import User
 from users.validators import validate_password
-
+from django.contrib.auth.forms import PasswordChangeForm
 
 class StyleFormMixin:
     def __init__(self, *args, **kwargs):
@@ -43,3 +43,6 @@ class UserUpdateForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = User
         fields = ('email', 'first_name', 'last_name', 'phone', 'telegram', 'avatar', )
+
+class UserPasswordChangeForm(StyleFormMixin, PasswordChangeForm):
+    pass
