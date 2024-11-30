@@ -48,24 +48,10 @@ class UserUpdateView(UpdateView):
         return self.request.user
 
 
-@login_required
-def user_change_password_view(request):
-    user_object = request.user
-    if request.method == 'POST':
-        form = UserPasswordChangeForm(user_object, request.POST)
-        if form.is_valid():
-            user_object = form.save()
-            update_session_auth_hash(request, user_object)
-            messages.success(request, 'Ваш пароль успешно обновлен!')
-
-            return HttpResponseRedirect(reverse('users:profile_user'))
-        else:
-            messages.error(request, 'Не удалось изменить пароль.')
-    form = UserPasswordChangeForm(user_object)
-    context = {
-        'form': form
-    }
-    return render(request, 'users/change_password_user.html', context)
+class UserChangePasswordView(PasswordChangeView):
+    form_class = UserPasswordChangeForm
+    template_name = 'users/change_password_user.html'
+    success_url = reverse_lazy('users:profile_user')
 
 
 def user_logout_view(request):
