@@ -1,8 +1,10 @@
+from pyexpat.errors import messages
+from django.contrib import messages
 from django.shortcuts import render, reverse, redirect
 from users.models import User
 from users.forms import UserRegisterForm, UserLoginForm, UserForm, UserUpdateForm
 from django.http import HttpResponseRedirect, HttpResponse
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 
 
@@ -64,11 +66,32 @@ def user_udate_view(request):
             return redirect('users:profile_user')
     user_name = user_object.first_name
     context = {
-    'user_object': user_object,
-    'title': f' Изменить профиль пользователя {user_name}',
-    'form': UserUpdateForm(instance=user_object),
+        'user_object': user_object,
+        'title': f' Изменить профиль пользователя {user_name}',
+        'form': UserUpdateForm(instance=user_object),
     }
     return render(request, 'users/update_user.html', context)
+
+
+@login_required
+def user_change_password_view(request):
+    user_object = request.user
+    if request.method == 'POST':
+        form = UserPasswordChangeForm(user_object, request.POST)
+        if form.is_valid():
+            user_object = form.save()
+            update_session_auth_hash(request, user_object)
+            messages.success(request, 'Ваш пароль успешно обновлен!')
+
+            return HttpResponseRedirect(reverse('users:profile_user'))
+        else:
+            messages.error(request, 'Не удалось изменить пароль.')
+    form = UserPasswordChangeForm(user_object)
+    context = {
+        'form': form
+    }
+    return render(request, 'users/change_password.html', context)
+
 
 def user_logout_view(request):
     logout(request)
