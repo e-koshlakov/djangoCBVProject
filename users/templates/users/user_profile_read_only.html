@@ -26,6 +26,12 @@
                 <button class="btn btn-outline-primary">
                     <a class="btn btn-link" href="{% url 'users:change_password_user' %}">Изменить пароль</a>
                 </button>
+
+                <button class="btn btn-outline-danger">
+                    <a class="btn btn-link" href="{% url 'users:user_generate_new_password' %}">Сгенерировать случайный
+                        пароль</a>
+                </button>
+
             </div>
             <div class="card-footer"></div>
         </div>

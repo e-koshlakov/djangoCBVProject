@@ -6,7 +6,7 @@ from users.forms import UserRegisterForm, UserLoginForm, UserForm, UserUpdateFor
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from users.services import send_registration_email
+from users.services import send_registration_email, send_new_password_email
 
 def user_register_view(request):
     form = UserRegisterForm(request.POST)
@@ -97,3 +97,11 @@ def user_change_password_view(request):
 def user_logout_view(request):
     logout(request)
     return redirect('dogs:index')
+
+@login_required
+def user_generate_new_password(request):
+    new_password = User.objects.make_random_password()
+    request.user.set_password(new_password)
+    request.user.save()
+    send_new_password_email(request.user.email, new_password)
+    return redirect(reverse('dogs:index'))
