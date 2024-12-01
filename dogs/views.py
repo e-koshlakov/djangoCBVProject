@@ -87,8 +87,9 @@ class DogUpdateView(UpdateView):
     model = Dog
     form_class = DogForm
     template_name = 'dogs/create_update.html'
-    success_url = reverse_lazy('dogs:list_dogs')
     extra_context = {'title': 'Редактирование питомца'}
+    def get_success_url(self):
+        return reverse('dogs:detail_dog', kwargs={'pk': self.object.pk})
 
 
 def dog_delete_view(request, pk):
