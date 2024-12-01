@@ -83,32 +83,12 @@ class DogDetailView(DetailView):
     extra_context = {'title': 'Питомник - Информация о собаке'}
 
 
-def dog_update_view(request, pk):
-    """
-    Обрабатывает обновление информации о собаке.
-
-    Аргументы:
-        request (HttpRequest): Объект запроса.
-        pk (int): Первичный ключ собаки.
-
-    Возвращает:
-        HttpResponse: Ответ с отрендеренным шаблоном страницы обновления собаки или перенаправление на страницу подробной информации о собаке.
-    """
-    dog_object = get_object_or_404(Dog, pk=pk)
-    if request.method == 'POST':
-        form = DogForm(request.POST, request.FILES, instance=dog_object)
-        if form.is_valid():
-            dog_object = form.save()
-            dog_object.save()
-            return HttpResponseRedirect(reverse('dogs:detail_dog', args={pk: pk}))
-
-    context = {
-        'object': dog_object,
-        'form': DogForm(instance=dog_object),
-        'title': 'Питомник - Обновление информации о собаке'
-    }
-
-    return render(request, 'dogs/create_update.html', context)
+class DogUpdateView(UpdateView):
+    model = Dog
+    form_class = DogForm
+    template_name = 'dogs/create_update.html'
+    success_url = reverse_lazy('dogs:list_dogs')
+    extra_context = {'title': 'Редактирование питомца'}
 
 
 def dog_delete_view(request, pk):
