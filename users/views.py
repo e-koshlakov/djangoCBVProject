@@ -56,8 +56,7 @@ class UserChangePasswordView(PasswordChangeView):
 
 class UserLogoutView(LogoutView):
     pass
-    # template_name = 'users/logout.html'
-    # next_page = reverse_lazy('dogs:index')
+    template_name = 'users/logout_user.html'
 
 
 @login_required
