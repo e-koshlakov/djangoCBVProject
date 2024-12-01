@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from dogs.models import Dog, Category
 from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from dogs.forms import DogForm
 
 
@@ -61,23 +62,11 @@ def category_dogs(request, pk):
 
     return render(request, 'dogs/dogs.html', context)
 
+class DogsListView(ListView):
+    model = Dog
+    template_name = 'dogs/dogs.html'
+    extra_context = {'title': 'Питомник - Все наши собаки'}
 
-def dogs_list_view(request):
-    """
-    Отображает страницу со всеми собаками.
-
-    Аргументы:
-        request (HttpRequest): Объект запроса.
-
-    Возвращает:
-        HttpResponse: Ответ с отрендеренным шаблоном страницы всех собак.
-    """
-    context = {
-        'object_list': Dog.objects.all(),
-        'title': 'Питомник - Все наши собаки'
-    }
-
-    return render(request, 'dogs/dogs.html', context)
 
 
 def dog_create_view(request):
@@ -147,7 +136,7 @@ def dog_update_view(request, pk):
         'title': 'Питомник - Обновление информации о собаке'
     }
 
-    return render(request, 'dogs/update.html', context)
+    return render(request, 'dogs/create_update.html', context)
 
 
 def dog_delete_view(request, pk):

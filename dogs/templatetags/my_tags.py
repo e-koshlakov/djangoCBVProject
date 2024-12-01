@@ -14,3 +14,4 @@ def user_media(value):
     if value:
         return fr'/media/{value}'
     return fr'/static/no_avatar.jpg'
+

@@ -1,16 +1,13 @@
-from pyexpat.errors import messages
-from django.contrib import messages
-from django.shortcuts import render, reverse, redirect
-from django.urls import reverse_lazy
-
-from users.models import User
-from users.forms import UserRegisterForm, UserLoginForm, UserForm, UserUpdateForm, UserPasswordChangeForm
-from django.contrib.auth.views import PasswordChangeView, LoginView, LogoutView
-from django.views.generic import CreateView, UpdateView
-from django.http import HttpResponseRedirect, HttpResponse
-from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+from django.shortcuts import reverse, redirect
 from django.contrib.auth.decorators import login_required
-from users.services import send_registration_email, send_new_password_email
+from django.contrib.auth.views import PasswordChangeView, LoginView, LogoutView
+from django.shortcuts import reverse, redirect
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, UpdateView
+
+from users.forms import UserRegisterForm, UserLoginForm, UserUpdateForm, UserPasswordChangeForm
+from users.models import User
+from users.services import send_new_password_email, send_registration_email
 
 
 class UserRegisterView(CreateView):

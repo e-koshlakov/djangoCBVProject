@@ -1,29 +1,36 @@
 {% extends 'dogs/base.html' %}
+{% load my_tags %}
 {% block content %}
 
 <form method="post" enctype="multipart/form-data" class="row">
     <div class="col-6">
         <div class="card">
             <div class="card-header">
-                {% if object %}
+                {% if dog_object %}
                 Редактирование собаки
                 {% else %}
                 Добавление собаки
                 {% endif %}
             </div>
             <div class="card-body">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-outline-success">
-                {% if object %}
-                Сохранить
-                {% else %}
-                Добавить
-                {% endif %}
-            </button>
-
+                <img class="card-img-top"
+                     src="{{ object.photo|my_media }}" width="300" height="400"
+                     alt="Card image cap">
+                <div class="card-text">
+                    <h4>{{ dog_object.name }}</h4>
+                    <p>{{ dog_object.description }}</p>
+                </div>
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-outline-success">
+                    {% if object %}
+                    Сохранить
+                    {% else %}
+                    Добавить
+                    {% endif %}
+                </button>
+            </div>
         </div>
-    </div>
     </div>
 </form>
 {% endblock %}
