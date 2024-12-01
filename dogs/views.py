@@ -92,20 +92,8 @@ class DogUpdateView(UpdateView):
         return reverse('dogs:detail_dog', kwargs={'pk': self.object.pk})
 
 
-def dog_delete_view(request, pk):
-    """
-    Обрабатывает удаление собаки.
-
-    Аргументы:
-        request (HttpRequest): Объект запроса.
-        pk (int): Первичный ключ собаки.
-
-    Возвращает:
-        HttpResponse: Ответ с отрендеренным шаблоном страницы удаления собаки или перенаправление на список собак.
-    """
-    dog_object = get_object_or_404(Dog, pk=pk)
-    if request.method == 'POST':
-        dog_object.delete()
-        return HttpResponseRedirect(reverse('dogs:list_dogs'))
-
-    return render(request, 'dogs/delete.html', {'object': dog_object})
+class DogDeleteView(DeleteView):
+    model = Dog
+    template_name = 'dogs/delete.html'
+    success_url = reverse_lazy('dogs:list_dogs')
+    extra_context = {'title': 'Удаление питомца'}
