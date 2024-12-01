@@ -62,53 +62,25 @@ def category_dogs(request, pk):
 
     return render(request, 'dogs/dogs.html', context)
 
+
 class DogsListView(ListView):
     model = Dog
     template_name = 'dogs/dogs.html'
     extra_context = {'title': 'Питомник - Все наши собаки'}
 
 
-
-def dog_create_view(request):
-    """
-    Обрабатывает создание новой собаки.
-
-    Аргументы:
-        request (HttpRequest): Объект запроса.
-
-    Возвращает:
-        HttpResponse: Ответ с отрендеренным шаблоном страницы создания собаки или перенаправление на список собак.
-    """
-    form = DogForm(request.POST, request.FILES)
-    if form.is_valid():
-        dog_object = form.save()
-        dog_object.owner = request.user
-        dog_object.save()
-        return HttpResponseRedirect(reverse('dogs:list_dogs'))
-    context = {
-        'title': 'Добавление питомца',
-        'form': DogForm(),
-    }
-
-    return render(request, 'dogs/create_update.html', context)
+class DogCreateView(CreateView):
+    model = Dog
+    form_class = DogForm
+    template_name = 'dogs/create_update.html'
+    success_url = reverse_lazy('dogs:list_dogs')
+    extra_context = {'title': 'Добавление питомца'}
 
 
-def dog_detail_view(request, pk):
-    """
-    Отображает страницу с подробной информацией о собаке.
-
-    Аргументы:
-        request (HttpRequest): Объект запроса.
-        pk (int): Первичный ключ собаки.
-
-    Возвращает:
-        HttpResponse: Ответ с отрендеренным шаблоном страницы подробной информации о собаке.
-    """
-    context = {
-        'object': get_object_or_404(Dog, pk=pk),
-        'title': 'Питомник - Информация о собаке'
-    }
-    return render(request, 'dogs/detail.html', context)
+class DogDetailView(DetailView):
+    model = Dog
+    template_name = 'dogs/detail.html'
+    extra_context = {'title': 'Питомник - Информация о собаке'}
 
 
 def dog_update_view(request, pk):
