@@ -155,8 +155,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
 LOGIN_REDIRECT_URL = 'dogs:index'
-#LOGOUT_REDIRECT_URL = 'dogs:index'
+# LOGOUT_REDIRECT_URL = 'dogs:index'
 LOGIN_URL = '/users/'
+CACHE_ENABLED = os.getenv('CACHE_ENABLED')
+CACHE_LOCATION = os.getenv('CACHE_LOCATION')
+if CACHE_ENABLED:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': CACHE_LOCATION
+            }
+        }
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
