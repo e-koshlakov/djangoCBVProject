@@ -1,5 +1,5 @@
 from django import forms
-from dogs.models import Dog
+from dogs.models import Dog, Parent
 import datetime
 
 from users.forms import StyleFormMixin
@@ -22,3 +22,9 @@ class DogForm(StyleFormMixin, forms.ModelForm):
             return cleaned_data
         else:
             return self.cleaned_data['birth_date']
+
+
+class ParentForm(StyleFormMixin, forms.ModelForm):
+    class Meta:
+        model = Parent
+        fields = '__all__'
