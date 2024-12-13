@@ -1,8 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils.translation import gettext_lazy as _
 
 NULLABLE = {'null': True, 'blank': True}
 
+class UserRoles(models.TextChoices):
+    """Class need for different level of permission, it depends of User.role
+    (Класс необходимый для различных уровней доступа, доступ зависит от User,role)"""
+    ADMIN = 'admin', _('admin')
+    MODERATOR = 'moderator', _('moderator')
+    USER = 'user', _('user')
 
 class User(AbstractUser):
     username = None
@@ -10,6 +17,7 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=50, default='Anonymous')
     # pk = models.AutoField(primary_key=True)
     email = models.EmailField(unique=True)
+    role = models.CharField(max_length=9, choices=UserRoles.choices, default=UserRoles.USER)
     phone = models.CharField(max_length=15, **NULLABLE)
     address = models.TextField(**NULLABLE)
     date_of_birth = models.DateField(**NULLABLE)

@@ -10,7 +10,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         ODBC_DRIVER = os.getenv('ODBC_DRIVER')
-        SERVER = os.getenv('SERVER')
+        SERVER = os.getenv('MS_SQL_SERVER')
         USER = os.getenv('DUSER')
         PASSWORD = os.getenv('PASSWORD')
         PAD_DATABASE = os.getenv('PAD_DATABASE')

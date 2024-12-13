@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 load_dotenv()
-SERVER = os.getenv('SERVER')
+SERVER = os.getenv('MS_SQL_SERVER')
 DATABASE = os.getenv('DATABASE')
 DUSER = os.getenv('DUSER')
 PASSWORD = os.getenv('PASSWORD')
