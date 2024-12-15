@@ -8,6 +8,8 @@ from dogs.forms import DogForm, ParentForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import inlineformset_factory
 
+from users.models import UserRoles
+
 
 def index(request):
     """
@@ -39,11 +41,29 @@ class DogCategoryListView(LoginRequiredMixin, ListView):
     extra_context = {'title': 'Питомник - Все наши собаки'}
 
 
-class DogsListView(ListView):
+class DogsListView(LoginRequiredMixin, ListView):
     model = Dog
     template_name = 'dogs/dogs.html'
     extra_context = {'title': 'Питомник - Все наши собаки'}
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(is_active=True)
+        return queryset
+
+class DogDeactivateListView(LoginRequiredMixin, ListView):
+    model = Dog
+    template_name = 'dogs/dogs.html'
+    extra_context = {'title': 'Питомник - неактивные собаки'}
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.user.role in [UserRoles.MODERATOR, UserRoles.ADMIN]:
+            queryset = queryset.filter(is_active=False)
+            return queryset
+        if self.request.user.role == UserRoles.USER:
+            queryset = queryset.filter(is_active=False, owner=self.request.user)
+            return queryset
 
 class DogCreateView(LoginRequiredMixin, CreateView):
     model = Dog

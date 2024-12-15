@@ -40,6 +40,7 @@ class Dog(models.Model):
     birth_date = models.DateField(verbose_name="birth_date", **NULLABLE)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL,  on_delete=models.SET_NULL, **NULLABLE,
                               verbose_name="Владелец")
+    is_active = models.BooleanField(default=True, verbose_name="is_active")
 
     def __str__(self):
         return f'{self.name} ({self.category})'
