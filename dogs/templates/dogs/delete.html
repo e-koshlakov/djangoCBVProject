@@ -2,7 +2,7 @@
 {% load my_tags %}
 {% block content %}
 
-<h1>Delete Dog</h1>
+<h1 xmlns="http://www.w3.org/1999/html">Delete Dog</h1>
 <form method="post" enctype="multipart/form-data" class="row">
     <div class="col-6">
         <div class="card">
@@ -12,19 +12,23 @@
                 {% endif %}
             </div>
             <div class="card-body">
-                <img class="card-img-top" src="{{ object.photo|my_media }}" width="300" height="320" alt="Card image cap">
+                <img class="card-img-top" src="{{ object.photo|my_media }}" width="300" height="320"
+                     alt="Card image cap">
                 <div class="card-body">
                     <p class="card-text">{{ object.name|title }}</p>
                 </div>
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-outline-danger">
-                    {% if object %}
-                    Удалить
-                    {% endif %}
-                </button>
+                <div class="card-footer">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-outline-danger">
+                        {% if object %}
+                        Удалить
+                        {% endif %}
+                    </button>
+                    <a href="{% url 'dogs:update_dog' object.pk %}" class="btn btn-outline-primary">Назад</a>
+                </div>
             </div>
         </div>
     </div>
 </form>
-{% endblock %}
+{% endblock %}pip install redis
