@@ -27,43 +27,16 @@ def index(request):
     return render(request, 'dogs/index.html', context)
 
 
-def categories(request):
-    """
-    Отображает страницу со всеми категориями пород.
-
-    Аргументы:
-        request (HttpRequest): Объект запроса.
-
-    Возвращает:
-        HttpResponse: Ответ с отрендеренным шаблоном страницы категорий.
-    """
-    context = {
-        'object_list': Category.objects.all(),
-        'title': 'Питомник - Все наши породы'
-    }
-
-    return render(request, 'dogs/categories.html', context)
+class CategoryListView(LoginRequiredMixin, ListView):
+    model = Category
+    template_name = 'dogs/categories.html'
+    extra_context = {'title': 'Питомник - Все наши породы'}
 
 
-def category_dogs(request, pk):
-    """
-    Отображает страницу с собаками определенной породы.
-
-    Аргументы:
-        request (HttpRequest): Объект запроса.
-        pk (int): Первичный ключ категории породы.
-
-    Возвращает:
-        HttpResponse: Ответ с отрендеренным шаблоном страницы собак определенной породы.
-    """
-    category_item = Category.objects.get(pk=pk)
-    context = {
-        'object_list': Dog.objects.filter(category_id=pk),
-        'title': 'Питомник - собаки породы ' + category_item.name,
-        'category_pk': category_item.pk,
-    }
-
-    return render(request, 'dogs/dogs.html', context)
+class DogCategoryListView(LoginRequiredMixin, ListView):
+    model = Dog
+    template_name = 'dogs/dogs.html'
+    extra_context = {'title': 'Питомник - Все наши собаки'}
 
 
 class DogsListView(ListView):
