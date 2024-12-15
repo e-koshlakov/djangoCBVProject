@@ -138,9 +138,9 @@ def dog_toggle_activity(request, pk):
     dog = get_object_or_404(Dog, pk=pk)
     if request.user.role in [UserRoles.MODERATOR, UserRoles.ADMIN]:
         if dog.is_active:
-            dog.is_active = True
-        else:
             dog.is_active = False
+        else:
+            dog.is_active = True
         dog.save()
         return HttpResponseRedirect(reverse('dogs:list_dogs'))
     else:

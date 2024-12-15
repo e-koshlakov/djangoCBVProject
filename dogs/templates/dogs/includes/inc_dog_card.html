@@ -10,16 +10,16 @@
         <div class="card-body">
             <h5 class="card-title pricing-card-title">Порода: {{object.category}} </h5>
             <ul class="list-unstyled mt-3 mb-4 text-start m-3 ">
-                <li> Дата рождения: {{ object.birth_date|default:"Не установлено" }}</li>
+                <li> Дата рождения: {{object.birth_date|default:"Не установлено"}}</li>
             </ul>
             <a class="btn btn-lg btn-block btn-outline-info"
                href="{% url 'dogs:detail_dog' object.pk %}">Подробнее</a>
             {% if user.is_authenticated and object.owner == user or user.is_staff %}
             <a class="btn btn-lg btn-block btn-outline-warning"
                href="{% url 'dogs:update_dog' object.pk %}">
-                {% if user.is_staff %}
+                {% if user.is_superuser %}
                 Изменить/Удалить
-                {% elif object.owner == user %}
+                {% elif object.owner == user or user.is_staff %}
                 Изменить
                 {% endif %}
             </a>

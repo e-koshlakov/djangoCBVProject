@@ -6,7 +6,7 @@
     <div class="col-6">
         <div class="card">
             <div class="card-header">
-                {% if dog_object %}
+                {% if object %}
                 Редактирование собаки
                 {% else %}
                 Добавление собаки
@@ -17,18 +17,29 @@
                      src="{{ object.photo|my_media }}" width="300" height="400"
                      alt="Card image cap">
                 <div class="card-text">
-                    <h4>{{ dog_object.name }}</h4>
-                    <p>{{ dog_object.description }}</p>
+                    <h4>{{ object.name }}</h4>
+                    <p>{{ object.description }}</p>
                 </div>
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button type="submit" class="btn btn-outline-success">
-                    {% if object %}
-                    Сохранить
+                <input type="submit" class="btn btn-outline-success"
+                       value="{% if object %}Сохранить{% else %}Добавить{% endif %}">
+                {% if object %}
+                <a href="{% url 'dogs:toggle_activity_dog' object.pk %}"
+                   class="btn btn-outline-warning float-right">
+                    {% if object.is_active %}
+                    Деактивировать
                     {% else %}
-                    Добавить
+                    Активировать
                     {% endif %}
-                </button>
+                </a>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'dogs:list_dogs' %}" class="btn btn-outline-primary">Назад</a>
+                {% if object and user.is_superuser %}
+                <a href="{% url 'dogs:delete_dog' object.pk %}" class="btn btn-outline-danger float-right">Удалить</a>
+                {% endif %}
             </div>
         </div>
     </div>
