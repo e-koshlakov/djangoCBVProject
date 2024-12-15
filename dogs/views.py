@@ -1,12 +1,13 @@
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, get_object_or_404
 from dogs.models import Dog, Category, Parent
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from dogs.forms import DogForm, ParentForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.forms import inlineformset_factory
+from django.core.exceptions import PermissionDenied
 
 from users.models import UserRoles
 
@@ -51,6 +52,7 @@ class DogsListView(LoginRequiredMixin, ListView):
         queryset = queryset.filter(is_active=True)
         return queryset
 
+
 class DogDeactivateListView(LoginRequiredMixin, ListView):
     model = Dog
     template_name = 'dogs/dogs.html'
@@ -65,6 +67,7 @@ class DogDeactivateListView(LoginRequiredMixin, ListView):
             queryset = queryset.filter(is_active=False, owner=self.request.user)
             return queryset
 
+
 class DogCreateView(LoginRequiredMixin, CreateView):
     model = Dog
     form_class = DogForm
@@ -73,6 +76,8 @@ class DogCreateView(LoginRequiredMixin, CreateView):
     extra_context = {'title': 'Добавление питомца'}
 
     def form_valid(self, form):
+        if self.request.user.role != UserRoles.USER:
+            raise PermissionDenied()
         self.object = form.save()
         self.object.owner = self.request.user
         self.object.save()
@@ -97,7 +102,8 @@ class DogUpdateView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
         if self.object.owner != self.request.user and not self.request.user.is_staff:
-            raise PermissionDenied
+        # if self.object.owner != self.request.user and self.request.user.role != UserRoles.ADMIN:
+            raise PermissionDenied()
         return self.object
 
     def get_context_data(self, **kwargs):
@@ -122,17 +128,22 @@ class DogUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class DogDeleteView(LoginRequiredMixin, DeleteView):
+class DogDeleteView(PermissionRequiredMixin, DeleteView):
     model = Dog
     template_name = 'dogs/delete.html'
     success_url = reverse_lazy('dogs:list_dogs')
     extra_context = {'title': 'Удаление питомца'}
+    permission_required = 'dogs.delete_dog'
+    # dogs.add_dog -  PermissionRequiredMixin + CreateView
+    # dogs.view_dog -  PermissionRequiredMixin + DetailView
+    # dogs.change_dog -  PermissionRequiredMixin + UpdateView
 
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
         if self.object.owner != self.request.user and not self.request.user.is_staff:
             raise PermissionDenied
         return self.object
+
 
 def dog_toggle_activity(request, pk):
     dog = get_object_or_404(Dog, pk=pk)
