@@ -133,3 +133,15 @@ class DogDeleteView(LoginRequiredMixin, DeleteView):
         if self.object.owner != self.request.user and not self.request.user.is_staff:
             raise PermissionDenied
         return self.object
+
+def dog_toggle_activity(request, pk):
+    dog = get_object_or_404(Dog, pk=pk)
+    if request.user.role in [UserRoles.MODERATOR, UserRoles.ADMIN]:
+        if dog.is_active:
+            dog.is_active = True
+        else:
+            dog.is_active = False
+        dog.save()
+        return HttpResponseRedirect(reverse('dogs:list_dogs'))
+    else:
+        raise PermissionDenied
