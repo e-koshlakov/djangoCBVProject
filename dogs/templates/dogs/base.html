@@ -28,6 +28,7 @@
                     <ul class="list-unstyled">
                         {% if user.is_superuser %}
                         <a class="p-2 btn btn-success" href="/admin/">Админка</a>
+                        <li><a href="{% url 'users:users_list' %}" class="text-white">Список пользователей </a></li>
                         {% endif %}
                         <li><a href="{% url 'dogs:index' %}" class="text-white">Главная</a></li>
                         <li><a href="{% url 'dogs:categories' %}" class="text-white">Породы</a></li>

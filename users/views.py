@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import PasswordChangeView, LoginView, LogoutView
 from django.shortcuts import reverse, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, ListView
 
 from users.forms import UserRegisterForm, UserLoginForm, UserUpdateForm, UserPasswordChangeForm
 from users.models import User
@@ -59,6 +59,15 @@ class UserLogoutView(LogoutView):
     pass
     template_name = 'users/logout_user.html'
 
+class UserListView(ListView):
+    model = User
+    template_name = 'users/users.html'
+    extra_context = {'title': 'Питомник - Список пользователей'}
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(is_active=True)
+        return queryset
 
 @login_required
 def user_generate_new_password(request):
