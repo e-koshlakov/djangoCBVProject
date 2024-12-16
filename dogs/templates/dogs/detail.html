@@ -9,9 +9,14 @@
     <div class="card mb-4 box-shadow">
         <img class="card-img-top" src="{{ object.photo|my_media }}" width="300" height="320" alt="Card image cap">
         <div class="card-body">
-<p class="card-text">{{ object.name|title }}, {{ object.category|title }}</p>
-            <span class="text-muted">{{ object.birth_date|default:"-" }}</span><br>
-            <span class="text-muted">{{ object.owner|default:"Без хозяина" }}</span>
+            <p class="card-text">
+                <td>Кличка</td>
+                {{ object.name|title }}
+            </p>
+            <span class="text-muted"><td>Дата рождения: </td> {{ object.birth_date|default:"-" }}</span><br>
+            <span class="text-muted"><td>Владелец: </td> {{ object.owner.first_name|default:"Без хозяина" }}</span><br>
+            <span class="text-muted"><td>Телефон владельца: </td> {{ object.owner.phone|default:"не указан" }}</span><br>
+            <span class="text-muted"><td>Просмотры: </td> {{ object.views }}</span><br>
         </div>
         <div class="card-footer">
             <a class="btn btn-link" href="{% url 'dogs:list_dogs' %}">назад</a>
