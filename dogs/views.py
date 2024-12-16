@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.forms import inlineformset_factory
 from django.core.exceptions import PermissionDenied
 
+from dogs.templates.dogs.services import send_email
 from users.models import UserRoles
 
 
@@ -89,6 +90,21 @@ class DogDetailView(DetailView):
     template_name = 'dogs/detail.html'
     extra_context = {'title': 'Питомник - Информация о собаке'}
 
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        object = self.get_object()
+        context_data['title'] = f'{object.name} ({object.category})'
+        dog_object_increase = get_object_or_404(Dog, pk=object.pk)
+        # if object.owner != self.request.user and self.request.user.role not in [UserRoles.ADMIN, UserRoles.MODERATOR]
+        if object.owner != self.request.user:
+            dog_object_increase.views_count()
+        if object.owner:
+            object_owner_email = object.owner.email
+            if dog_object_increase.views % 100 == 0 and dog_object_increase.views != 0:
+                print(object_owner_email)
+                send_email(dog_object_increase.name, object_owner_email, dog_object_increase.views)
+        return context_data
+
 
 class DogUpdateView(LoginRequiredMixin, UpdateView):
     model = Dog
@@ -102,7 +118,7 @@ class DogUpdateView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
         if self.object.owner != self.request.user and not self.request.user.is_staff:
-        # if self.object.owner != self.request.user and self.request.user.role != UserRoles.ADMIN:
+            # if self.object.owner != self.request.user and self.request.user.role != UserRoles.ADMIN:
             raise PermissionDenied()
         return self.object
 
@@ -134,6 +150,7 @@ class DogDeleteView(PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('dogs:list_dogs')
     extra_context = {'title': 'Удаление питомца'}
     permission_required = 'dogs.delete_dog'
+
     # dogs.add_dog -  PermissionRequiredMixin + CreateView
     # dogs.view_dog -  PermissionRequiredMixin + DetailView
     # dogs.change_dog -  PermissionRequiredMixin + UpdateView
