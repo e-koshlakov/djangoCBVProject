@@ -4,7 +4,7 @@ from dogs.models import Dog, Category, Parent
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from dogs.forms import DogForm, ParentForm
+from dogs.forms import DogForm, ParentForm, DogAdminForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.forms import inlineformset_factory
 from django.core.exceptions import PermissionDenied
@@ -121,6 +121,17 @@ class DogUpdateView(LoginRequiredMixin, UpdateView):
             # if self.object.owner != self.request.user and self.request.user.role != UserRoles.ADMIN:
             raise PermissionDenied()
         return self.object
+
+    def get_form_class(self):
+        dog_forms = {
+            'admin': DogAdminForm,
+            'moderator': DogForm,
+            'user': DogForm,
+        }
+        user_role = self.request.user.role
+        dog_form_class = dog_forms[user_role]
+        return dog_form_class
+
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
