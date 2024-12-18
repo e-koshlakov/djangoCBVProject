@@ -1,0 +1,14 @@
+{% load my_tags %}
+<div class="col-5">
+    <div class="card mb-0 box-shadow">
+        <div class="card-header">
+            <h4 class="my-0 font-weight-normal float-center">Кличка: {{ object.dog.name }} / порода: {{ object.dog.category }}</h4>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title pricing-card-title">{{object.title|truncatechars:30}} </h5>
+            <ul class="list-unstyled mt-3 mb-4 text-start m-3 ">
+                <li> Дата рождения: {{object.created}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
