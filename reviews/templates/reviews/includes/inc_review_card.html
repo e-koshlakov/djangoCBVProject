@@ -1,14 +1,25 @@
-{% load my_tags %}
-<div class="col-5">
-    <div class="card mb-0 box-shadow">
+<div class="col-4">
+    <div class="card mb-4 box-shadow">
         <div class="card-header">
-            <h4 class="my-0 font-weight-normal float-center">Кличка: {{ object.dog.name }} / порода: {{ object.dog.category }}</h4>
+            <h4 class="my-0 font-weight-normal">{{ object.dog.name }}, {{object.dog.category }}</h4>
         </div>
         <div class="card-body">
-            <h5 class="card-title pricing-card-title">{{object.title|truncatechars:30}} </h5>
+            <h5 class="card-title pricing-card-title">{{ object.title|truncatechars:30 }}</h5>
             <ul class="list-unstyled mt-3 mb-4 text-start m-3 ">
-                <li> Дата рождения: {{object.created}}</li>
+                <li> Дата создания: {{object.created}}</li>
             </ul>
+            <a class="btn btn-lg btn-block btn-outline-info"
+               href="{% url 'reviews:detail_review' object.slug %}">Подробнее</a>
+            {% if user.is_authenticated and object.author == user or user.is_staff %}
+            <a class="btn btn-lg btn-block btn-outline-warning"
+               href="{% url 'reviews:update_review' object.slug %}">
+                {% if user.is_superuser %}
+                Изменить/Удалить
+                {% elif object.author == user %}
+                Изменить
+                {% endif %}
+            </a>
+            {% endif %}
         </div>
     </div>
 </div>

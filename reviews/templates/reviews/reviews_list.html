@@ -1,0 +1,17 @@
+{% extends 'dogs/base.html' %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        {% for object in object_list %}
+        {% include 'reviews/includes/inc_review_card.html' with object=object %}
+        {% endfor %}
+    </div>
+    {% include 'dogs/includes/inc_pagination.html' with page_obj=page_obj %}
+    <a href="{% url 'reviews:deactivated_reviews' %}" class="btn btn-outline-secondary m-2 float-right">Неактивные
+        отзывы</a>
+    <a href="{% url 'reviews:list_reviews' %}" class="btn btn-outline-success m-2 float-right">Активные отзывы</a>
+    <a href="{% url 'reviews:create_review' %}" class="btn btn-outline-primary m-2 float-left">Добавить отзыв</a>
+</div>
+
+{% endblock %}

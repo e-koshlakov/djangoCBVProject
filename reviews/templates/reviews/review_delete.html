@@ -1,21 +1,18 @@
 {% extends 'dogs/base.html' %}
-{% load my_tags %}
 {% block content %}
 
-<h1 xmlns="http://www.w3.org/1999/html">Delete Dog</h1>
 <form method="post" enctype="multipart/form-data" class="row">
     <div class="col-6">
         <div class="card">
             <div class="card-header">
                 {% if object %}
-                Вы уверены что хотите удалить собаку?
+                Вы уверены что хотите удалить отзыв?
                 {% endif %}
             </div>
             <div class="card-body">
-                <img class="card-img-top" src="{{ object.photo|my_media }}" width="300" height="320"
-                     alt="Card image cap">
                 <div class="card-body">
-                    <p class="card-text">{{ object.name|title }}</p>
+                    <p class="card-text">{{ object.dog.name|title }}</p>
+                    <p class="card-text">{{ object.title }}</p>
                 </div>
                 <div class="card-footer">
                     {% csrf_token %}
@@ -25,7 +22,7 @@
                         Удалить
                         {% endif %}
                     </button>
-                    <a href="{% url 'dogs:update_dog' object.pk %}" class="btn btn-outline-primary">Назад</a>
+                    <a href="{% url 'reviews:update_review' object.slug %}" class="btn btn-outline-primary">Назад</a>
                 </div>
             </div>
         </div>
