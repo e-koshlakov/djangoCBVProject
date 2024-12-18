@@ -19,6 +19,7 @@ class Review(models.Model):
     class Meta:
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
+        ordering = ['created']
 
     def __str__(self):
         return f'{self.title}'
