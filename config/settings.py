@@ -160,7 +160,7 @@ LOGIN_REDIRECT_URL = 'dogs:index'
 LOGIN_URL = '/users/'
 CACHE_ENABLED = os.getenv('CACHE_ENABLED')
 CACHE_LOCATION = os.getenv('CACHE_LOCATION')
-if CACHE_ENABLED:
+if CACHE_ENABLED == 'True':
     CACHES = {
         'default': {
             'BACKEND': 'django.core.cache.backends.redis.RedisCache',
