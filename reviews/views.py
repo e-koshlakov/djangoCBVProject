@@ -76,3 +76,18 @@ class DogReviewDeleteView(PermissionRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse('reviews:list_reviews')
+
+
+def review_toggle_activity(request, slug):
+    review = get_object_or_404(Review, slug=slug)
+    if review.author != request.user or request.user not in [UserRoles.ADMIN, UserRoles.MODERATOR]:
+        return HttpResponseForbidden()
+
+    if review.sign_of_review:
+        review.sign_of_review = True
+        review.save()
+        return redirect('reviews:deactivated_reviews')
+    else:
+        review.sign_of_review = False
+        review.save()
+        return redirect('reviews:list_reviews')
