@@ -21,7 +21,7 @@ class ReviewListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         queryset = queryset.filter(sign_of_review=True)
-        return queryset
+        return queryset.order_by('created')
 
 
 class DogReviewListViewAll(LoginRequiredMixin, ListView):
