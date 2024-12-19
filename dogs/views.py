@@ -8,7 +8,7 @@ from dogs.forms import DogForm, ParentForm, DogAdminForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.forms import inlineformset_factory
 from django.core.exceptions import PermissionDenied
-
+from django.db.models import Q
 from dogs.templates.dogs.services import send_email
 from users.models import UserRoles
 
@@ -37,10 +37,11 @@ class CategoryListView(LoginRequiredMixin, ListView):
     extra_context = {'title': 'Питомник - Все наши породы'}
 
 
-class DogCategoryListView(LoginRequiredMixin, ListView):
-    model = Dog
-    template_name = 'dogs/dogs.html'
-    extra_context = {'title': 'Питомник - Все наши собаки'}
+
+# class DogCategoryListView(LoginRequiredMixin, ListView):
+#     model = Dog
+#     template_name = 'dogs/dogs.html'
+#     extra_context = {'title': 'Питомник - Все наши собаки'}
 
 
 class DogsListView(LoginRequiredMixin, ListView):
@@ -132,7 +133,6 @@ class DogUpdateView(LoginRequiredMixin, UpdateView):
         dog_form_class = dog_forms[user_role]
         return dog_form_class
 
-
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         ParentFormset = inlineformset_factory(Dog, Parent, form=ParentForm, extra=1)
@@ -171,6 +171,32 @@ class DogDeleteView(PermissionRequiredMixin, DeleteView):
         if self.object.owner != self.request.user and not self.request.user.is_staff:
             raise PermissionDenied
         return self.object
+
+
+class DogsSearchListView(LoginRequiredMixin, ListView):
+    model = Dog
+    template_name = 'dogs/dogs.html'
+    extra_context = {'title': 'Питомник - Поиск'}
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        object_list = Dog.objects.filter(
+            Q(name__icontains=query) & Q(is_active=True)
+        )
+        return object_list
+
+
+class DogsCategorySearchListView(LoginRequiredMixin, ListView):
+    model = Category
+    template_name = 'dogs/categories.html'
+    extra_context = {'title': 'Питомник - Поиск по породам'}
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        object_list = Category.objects.filter(
+            Q(name__icontains=query)
+        )
+        return object_list
 
 
 def dog_toggle_activity(request, pk):

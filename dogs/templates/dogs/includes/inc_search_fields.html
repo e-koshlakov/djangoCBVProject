@@ -1,0 +1,6 @@
+<form action="{% url 'dogs:search_dogs' %}" method="get">
+    <input name="q" type="text" placeholder="Поиск собаки по кличке">
+</form>
+<form action="{% url 'dogs:search_category_dogs' %}" method="get">
+    <input name="q" type="text" placeholder="Поиск породы">
+</form>
